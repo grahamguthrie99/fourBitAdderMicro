@@ -136,10 +136,22 @@ void PF0_led_off()
    GPIO_PORTF_AHB_DATA_R = GPIO_PORTF_AHB_DATA_R & ~(PF0_MSK);
 }	
 // ---  MAIN function  ------------
-void debounce(){
-
-	
-
+bool debounce()
+{
+   				
+				bool firstCheck;
+							if(GPIO_PORTJ_AHB_DATA_R & SW1_MSK)
+							{
+								firstCheck = true;
+							}
+							else	
+							{
+								firstCheck =false;
+							}
+						tenSecDelay();
+						
+					return firstCheck;
+					
 }
 
 int main(void)
@@ -165,25 +177,12 @@ int main(void)
 				{
 							sw1Open =false;
 				}
-						
 				if(!sw1Open)
-				{					
-					while (!sw1Open)
-					{
-						
-							if(GPIO_PORTJ_AHB_DATA_R & SW1_MSK)
-							{
-								sw1Open = true;
-							}
-							else	
-							{
-								sw1Open =false;
-							}
-						tenSecDelay();
-						
-					}
+				{	 
+					while(!debounce());
 					counter++;
-			 }
+				}
+				
 				
 				if(counter < 8)
 				{
